@@ -188,24 +188,58 @@ function M.apply(config, user_config)
     -- 应用默认快捷键
     config = apply_default_keys(config)
 
-    -- 应用Leader模式
-    config = apply_leader_mode(config, keybindings_config.leader)
+    -- 应用Leader模式（默认启用）
+    local leader_cfg = keybindings_config.leader or {}
+    if leader_cfg.enabled ~= false then
+        -- 使用默认 Leader 配置
+        config.leader = constants.LEADER_CONFIG
+
+        -- Leader 模式快捷键（直接添加到 keys）
+        table.insert(config.keys, { key = "f", mods = "LEADER", action = wezterm.action.ActivateKeyTable({
+            name = "resize_font",
+            one_shot = false,
+            timeout_milliseconds = 1000,
+        })})
+        table.insert(config.keys, { key = "p", mods = "LEADER", action = wezterm.action.ActivateKeyTable({
+            name = "resize_pane",
+            one_shot = false,
+            timeout_milliseconds = 1000,
+        })})
+    end
 
     -- 应用窗格调整模式
-    config = apply_resize_mode(config, keybindings_config.resize_mode)
+    local resize_mode = keybindings_config.resize_mode or {}
+    if resize_mode.enabled then
+        config = apply_resize_mode(config, resize_mode)
+    end
 
     -- 应用激活窗格模式
-    config = apply_activate_pane_mode(config, keybindings_config.activate_pane_mode)
+    local activate_mode = keybindings_config.activate_pane_mode or {}
+    if activate_mode.enabled then
+        config = apply_activate_pane_mode(config, activate_mode)
+    end
 
     -- 应用自定义快捷键
     if keybindings_config.custom_keys then
         config = apply_custom_keys(config, keybindings_config.custom_keys)
     end
 
-    -- 注册所有键表
+    -- 注册键表（合并默认键表和自定义键表）
     config.key_tables = {}
+
+    -- 添加默认键表（直接赋值给 key_tables）
+    for name, keys in pairs(constants.KEY_TABLES) do
+        config.key_tables[name] = keys
+    end
+
+    -- 添加动态注册的键表
     for name, keys in pairs(KeyTableManager.active_key_tables) do
-        table.insert(config.key_tables, { name = name, keys = keys })
+        config.key_tables[name] = keys
+    end
+
+    -- 应用鼠标绑定
+    if keybindings_config.mouse_bindings ~= false then
+        config.mouse_bindings = constants.MOUSE_BINDINGS
     end
 
     -- 禁用默认键绑定（如果配置了）

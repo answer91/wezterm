@@ -157,16 +157,42 @@ M.THEMES = {
     },
 }
 
+-- ==================== 平台修饰键配置 ====================
+
+M.MOD_KEYS = {
+    -- Linux 使用 ALT 作为主修饰键（避免与 Windows 键冲突）
+    SUPER = "ALT",
+    SUPER_REV = "ALT|CTRL",
+}
+
 -- ==================== 默认快捷键映射 ====================
 
 M.DEFAULT_KEYBINDINGS = {
-    -- 基础操作
+    -- ========== 功能键 ==========
+    { key = "F1", mods = "NONE", action = "ActivateCopyMode" },
+    { key = "F2", mods = "NONE", action = wezterm.action.ActivateCommandPalette },
+    { key = "F3", mods = "NONE", action = wezterm.action.ShowLauncher },
+    { key = "F4", mods = "NONE", action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
+    { key = "F5", mods = "NONE", action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+    { key = "F11", mods = "NONE", action = wezterm.action.ToggleFullScreen },
+    { key = "F12", mods = "NONE", action = wezterm.action.ShowDebugOverlay },
+
+    -- ========== 基础操作 ==========
     { key = "c", mods = "CTRL|SHIFT", action = wezterm.action.CopyTo("Clipboard") },
     { key = "v", mods = "CTRL|SHIFT", action = wezterm.action.PasteFrom("Clipboard") },
 
-    -- 标签页操作
-    { key = "t", mods = "CTRL|SHIFT", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
-    { key = "w", mods = "CTRL|SHIFT", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
+    -- ========== 标签页操作 ==========
+    -- 标签页：新建和关闭
+    { key = "t", mods = "ALT", action = wezterm.action.SpawnTab("DefaultDomain") },
+    { key = "w", mods = "ALT|CTRL", action = wezterm.action.CloseCurrentTab({ confirm = false }) },
+
+    -- 标签页：导航
+    { key = "[", mods = "ALT", action = wezterm.action.ActivateTabRelative(-1) },
+    { key = "]", mods = "ALT", action = wezterm.action.ActivateTabRelative(1) },
+    { key = "[", mods = "ALT|CTRL", action = wezterm.action.MoveTabRelative(-1) },
+    { key = "]", mods = "ALT|CTRL", action = wezterm.action.MoveTabRelative(1) },
+
+    -- 标签页：数字切换
     { key = "1", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(0) },
     { key = "2", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(1) },
     { key = "3", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(2) },
@@ -177,29 +203,93 @@ M.DEFAULT_KEYBINDINGS = {
     { key = "8", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(7) },
     { key = "9", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(-1) },
 
-    -- 窗格操作
-    { key = "-", mods = "CTRL|SHIFT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
-    { key = "\\", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-    { key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
-    { key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
-    { key = "k", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
-    { key = "j", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
-    { key = "q", mods = "CTRL|SHIFT", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
+    -- ========== 窗口操作 ==========
+    { key = "n", mods = "ALT", action = wezterm.action.SpawnWindow },
+    {
+        key = "Enter",
+        mods = "ALT|CTRL",
+        action = wezterm.action_callback(function(window, _pane)
+            window:maximize()
+        end)
+    },
 
-    -- 字体大小调整
+    -- ========== 窗格操作 ==========
+    -- 窗格：分割
+    { key = "\\", mods = "ALT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+    { key = "\\", mods = "ALT|CTRL", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+
+    -- 窗格：缩放和关闭
+    { key = "Enter", mods = "ALT", action = wezterm.action.TogglePaneZoomState },
+    { key = "w", mods = "ALT", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
+
+    -- 窗格：导航（Vim风格）
+    { key = "h", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
+    { key = "j", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Down") },
+    { key = "k", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Up") },
+    { key = "l", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
+
+    -- 窗格：快速选择和交换
+    {
+        key = "p",
+        mods = "ALT|CTRL",
+        action = wezterm.action.PaneSelect({ alphabet = "1234567890", mode = "SwapWithActiveKeepFocus" }),
+    },
+
+    -- 窗格：滚动
+    { key = "u", mods = "ALT", action = wezterm.action.ScrollByLine(-5) },
+    { key = "d", mods = "ALT", action = wezterm.action.ScrollByLine(5) },
+    { key = "PageUp", mods = "NONE", action = wezterm.action.ScrollByPage(-0.75) },
+    { key = "PageDown", mods = "NONE", action = wezterm.action.ScrollByPage(0.75) },
+
+    -- ========== 字体大小调整 ==========
     { key = "=", mods = "CTRL|SHIFT", action = wezterm.action.IncreaseFontSize },
     { key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
     { key = "0", mods = "CTRL|SHIFT", action = wezterm.action.ResetFontSize },
 
-    -- 滚动
-    { key = "u", mods = "CTRL|SHIFT", action = wezterm.action.ScrollByPage(-0.5) },
-    { key = "d", mods = "CTRL|SHIFT", action = wezterm.action.ScrollByPage(0.5) },
-    { key = "Home", mods = "SHIFT", action = wezterm.action.ScrollToTop },
-    { key = "End", mods = "SHIFT", action = wezterm.action.ScrollToBottom },
+    -- ========== 搜索 ==========
+    { key = "f", mods = "ALT", action = wezterm.action.Search({ CaseInSensitiveString = "" }) },
 
-    -- 其他
+    -- ========== 其他 ==========
     { key = "r", mods = "CTRL|SHIFT", action = wezterm.action.ReloadConfiguration },
-    { key = "f", mods = "CTRL|SHIFT", action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
+}
+
+-- ==================== 键表（Key Tables）====================
+
+M.KEY_TABLES = {
+    resize_font = {
+        { key = "k", action = wezterm.action.IncreaseFontSize },
+        { key = "j", action = wezterm.action.DecreaseFontSize },
+        { key = "r", action = wezterm.action.ResetFontSize },
+        { key = "Escape", action = "PopKeyTable" },
+        { key = "q", action = "PopKeyTable" },
+    },
+    resize_pane = {
+        { key = "k", action = wezterm.action.AdjustPaneSize({ "Up", 1 }) },
+        { key = "j", action = wezterm.action.AdjustPaneSize({ "Down", 1 }) },
+        { key = "h", action = wezterm.action.AdjustPaneSize({ "Left", 1 }) },
+        { key = "l", action = wezterm.action.AdjustPaneSize({ "Right", 1 }) },
+        { key = "Escape", action = "PopKeyTable" },
+        { key = "q", action = "PopKeyTable" },
+    },
+}
+
+-- ==================== 鼠标绑定 ====================
+
+M.MOUSE_BINDINGS = {
+    -- Ctrl+点击打开链接
+    {
+        event = { Up = { streak = 1, button = "Left" } },
+        mods = "CTRL",
+        action = wezterm.action.OpenLinkAtMouseCursor,
+    },
+}
+
+-- ==================== Leader 配置 ====================
+
+M.LEADER_CONFIG = {
+    key = "Space",
+    mods = "ALT|CTRL",
+    timeout_milliseconds = 1000,
 }
 
 -- ==================== 默认配置选项 ====================
