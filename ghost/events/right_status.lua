@@ -1,0 +1,41 @@
+-- 右侧状态栏事件
+-- 负责显示右侧状态栏，包括时间等信息
+
+local wezterm = require("wezterm")
+
+local M = {}
+
+--- 配置选项
+---@class RightStatusOptions
+---@field date_format string 时间格式，默认 '%H:%M'
+local default_opts = {
+    date_format = "%H:%M:%S",
+}
+
+--- 当前配置
+local opts = {}
+
+--- 验证和合并选项
+---@param user_opts table|nil 用户配置
+local function setup_opts(user_opts)
+    opts = {}
+    for k, v in pairs(default_opts) do
+        opts[k] = user_opts and user_opts[k] or v
+    end
+end
+
+--- 注册事件到 wezterm
+---@param user_opts table|nil 用户配置
+function M.register(user_opts)
+    setup_opts(user_opts)
+
+    wezterm.on("update-right-status", function(window, _pane)
+        local time_text = wezterm.strftime(opts.date_format)
+
+        window:set_right_status(wezterm.format({
+            { Text = time_text },
+        }))
+    end)
+end
+
+return M

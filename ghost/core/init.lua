@@ -2,6 +2,7 @@
 -- 提供懒加载机制和配置合并功能
 
 local M = {}
+local wezterm = require("wezterm")
 
 -- 懒加载缓存
 local loaded_modules = {}

@@ -174,26 +174,22 @@ EventHandler:init()
 -- 导出配置
 -- ============================================
 
--- 注册标签页标题格式化事件
-wezterm.on("format-tab-title", function(tab_info, _tabs, _panes, _conf)
-    -- tab_info 是 TabInformation 对象，直接访问其字段
-    local process_name = tab_info.active_pane.foreground_process_name or "shell"
-    local cwd = tab_info.active_pane.current_working_dir
+-- 注册事件
+local format_tab_title = core.require("ghost.events.format_tab_title")
+if format_tab_title then
+    format_tab_title.register()
+end
 
-    local cwd_display = ""
-    if cwd and cwd.file_path then
-        local path = cwd.file_path
-        cwd_display = path:match("([^/]+)$") or path
-        if cwd_display == "" then
-            cwd_display = "/"
-        end
-    end
+-- 右侧状态栏
+local right_status = core.require("ghost.events.right_status")
+if right_status then
+    right_status.register()
+end
 
-    local time_str = os.date("%H:%M")
-    local left_part = process_name .. " ~ " .. cwd_display
-    local right_part = time_str
-
-    return string.format("%s   %s", left_part, right_part)
-end)
+-- 窗口最大化
+local window_maximize = core.require("ghost.events.window_maximize")
+if window_maximize then
+    window_maximize.register()
+end
 
 return config
