@@ -218,6 +218,14 @@ M.DEFAULT_CONFIG = {
     window_close_confirmation = "AlwaysPrompt",
 }
 
+-- 默认背景图片配置
+M.DEFAULT_BACKGROUND = {
+    enabled = true,
+    type = "image",
+    image_path = "sword.jpg",
+    image_opacity = 1,
+}
+
 -- ==================== 常用字体 ====================
 
 M.FONTS = {

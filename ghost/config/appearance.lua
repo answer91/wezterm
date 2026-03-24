@@ -212,7 +212,11 @@ function M.apply(config, user_config)
     config = apply_font(config, appearance_config.font)
 
     -- 应用背景配置
-    config = apply_background(config, appearance_config.background)
+    local background_config = appearance_config.background
+    if not background_config and constants.DEFAULT_BACKGROUND then
+        background_config = constants.DEFAULT_BACKGROUND
+    end
+    config = apply_background(config, background_config)
 
     -- 应用窗口配置
     config = apply_window(config, appearance_config.window or {})
