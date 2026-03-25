@@ -1,9 +1,15 @@
 -- 快捷键系统
 -- 提供模块化的快捷键管理，支持多种模式和自定义覆盖
+-- 使用 package.loaded 避免循环引用
 
-local wezterm = require("wezterm")
-local core = require("ghost.core.init")
-local constants = require("ghost.core.constants")
+local module = require("ghost.core.module")
+local constants = require("ghost.constants.init")
+local logger = require("ghost.core.logger")
+
+--- 获取 wezterm（延迟加载，使用 package.loaded 避免循环引用）
+local function get_wezterm()
+    return package.loaded["wezterm"]
+end
 
 local M = {}
 
@@ -74,6 +80,7 @@ local function apply_leader_mode(config, leader_config)
     config.leader = { key = leader_key, mods = leader_mods, timeout_milliseconds = timeout }
 
     -- Leader模式下的快捷键
+    local wezterm = get_wezterm()
     local leader_keys = {
         { key = "c", mods = "LEADER", action = wezterm.action.CopyTo("Clipboard") },
         { key = "v", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
@@ -110,6 +117,7 @@ local function apply_resize_mode(config, resize_config)
         return config
     end
 
+    local wezterm = get_wezterm()
     local resize_keys = {
         -- 调整窗格大小
         { key = "h", mods = "ALT", action = wezterm.action.AdjustPaneSize({ "Left", 1 }) },
@@ -141,6 +149,7 @@ local function apply_activate_pane_mode(config, activate_config)
         return config
     end
 
+    local wezterm = get_wezterm()
     local activate_keys = {
         { key = "h", mods = "ALT", action = wezterm.action.ActivatePaneDirection("Left") },
         { key = "l", mods = "ALT", action = wezterm.action.ActivatePaneDirection("Right") },
@@ -195,6 +204,7 @@ function M.apply(config, user_config)
         config.leader = constants.LEADER_CONFIG
 
         -- Leader 模式快捷键（直接添加到 keys）
+        local wezterm = get_wezterm()
         table.insert(config.keys, { key = "f", mods = "LEADER", action = wezterm.action.ActivateKeyTable({
             name = "resize_font",
             one_shot = false,

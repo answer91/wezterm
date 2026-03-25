@@ -1,32 +1,31 @@
 -- 外观配置模块
 -- 负责主题、字体、背景等视觉相关的配置
 
-local wezterm = require("wezterm")
-local core = require("ghost.core.init")
-local utils = require("ghost.core.utils")
-local constants = require("ghost.core.constants")
+-- 获取 wezterm（延迟加载，使用 package.loaded 避免循环引用）
+local function get_wezterm()
+    return package.loaded["wezterm"]
+end
+
+local module = require("ghost.core.module")
+local utils = require("ghost.utils.init")
+local constants = require("ghost.constants.init")
+local logger = require("ghost.core.logger")
 
 local M = {}
 
 --- 应用主题
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param theme_name string 主题名称
 --- @param custom_colors table|nil 自定义颜色（可选）
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 local function apply_theme(config, theme_name, custom_colors)
-    wezterm.log_info("Applying theme: " .. tostring(theme_name))
+    logger.info("appearance", "Applying theme: " .. tostring(theme_name))
 
-    local theme = constants.THEMES[theme_name]
-    if not theme then
-        wezterm.log_info("Theme not found: " .. theme_name .. ", using moonlight_ii_italic")
-        theme = constants.THEMES.moonlight_ii_italic
-    end
-
-    wezterm.log_info("Theme background: " .. tostring(theme.background))
+    local theme = constants.get_theme(theme_name)
 
     -- 合并自定义颜色
     if custom_colors then
-        theme = core.merge_config(theme, custom_colors)
+        theme = module.merge_config(theme, custom_colors)
     end
 
     -- 应用颜色配置
@@ -41,27 +40,23 @@ local function apply_theme(config, theme_name, custom_colors)
         selection_bg = theme.selection_bg,
         scrollbar_thumb = theme.scrollbar_thumb,
         split = theme.split,
-
         visual_bell = theme.visual_bell,
-
         indexed = theme.indexed,
-
         tab_bar = theme.tab_bar,
-
         ansi = theme.ansi,
         brights = theme.brights,
     }
-
-    -- wezterm.log_info("Applied colors background: " .. tostring(config.colors.background))
 
     return config
 end
 
 --- 配置字体
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param font_config table 字体配置
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 local function apply_font(config, font_config)
+    local wezterm = get_wezterm()
+
     if not font_config or not font_config.font_family then
         -- 使用默认字体
         config.font = wezterm.font_with_fallback({
@@ -90,10 +85,12 @@ local function apply_font(config, font_config)
 end
 
 --- 配置背景
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param background_config table 背景配置
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 local function apply_background(config, background_config)
+    local wezterm = get_wezterm()
+
     if not background_config or not background_config.enabled then
         config.window_background_opacity = 1.0
         return config
@@ -107,12 +104,12 @@ local function apply_background(config, background_config)
     if background_config.type == "image" and background_config.image_path then
         -- 图片背景
         local full_path = background_config.image_path
-        if not utils.file_exists(full_path) then
+        if not utils.exists(full_path) then
             -- 尝试相对路径
             full_path = utils.get_config_dir() .. "/pictures/" .. background_config.image_path
         end
 
-        if utils.file_exists(full_path) then
+        if utils.exists(full_path) then
             config.background = {
                 {
                     source = { File = { path = full_path } },
@@ -145,9 +142,9 @@ local function apply_background(config, background_config)
 end
 
 --- 配置窗口外观
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param window_config table 窗口配置
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 local function apply_window(config, window_config)
     -- 窗口内边距
     config.window_padding = {
@@ -184,9 +181,9 @@ local function apply_window(config, window_config)
 end
 
 --- 配置光标
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param cursor_config table 光标配置
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 local function apply_cursor(config, cursor_config)
     if cursor_config then
         config.default_cursor_style = cursor_config.style or "BlinkingBlock"
@@ -201,61 +198,33 @@ local function apply_cursor(config, cursor_config)
 end
 
 --- 配置超链接高亮
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param hyperlink_config table|nil 超链接配置
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 local function apply_hyperlinks(config, hyperlink_config)
+    local wezterm = get_wezterm()
+
     -- 默认超链接高亮规则
     local default_rules = {
-        -- URL in parens: (URL)
-        {
-            regex = '\\(\\w+://\\S+\\)',
-            format = '$1',
-            highlight = 1,
-        },
-        -- URL in brackets: [URL]
-        {
-            regex = '\\[\\w+://\\S+\\]',
-            format = '$1',
-            highlight = 1,
-        },
-        -- URL in curly braces: {URL}
-        {
-            regex = '\\{\\w+://\\S+\\}',
-            format = '$1',
-            highlight = 1,
-        },
-        -- URL in angle brackets: <URL>
-        {
-            regex = '<\\w+://\\S+>',
-            format = '$1',
-            highlight = 1,
-        },
-        -- Then handle URLs not wrapped in brackets
-        {
-            regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
-            format = '$0',
-        },
-        -- implicit mailto link
-        {
-            regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
-            format = 'mailto:$0',
-        },
+        { regex = '\\(\\w+://\\S+\\)', format = '$1', highlight = 1 },
+        { regex = '\\[\\w+://\\S+\\]', format = '$1', highlight = 1 },
+        { regex = '\\{\\w+://\\S+\\}', format = '$1', highlight = 1 },
+        { regex = '<\\w+://\\S+>', format = '$1', highlight = 1 },
+        { regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+', format = '$0' },
+        { regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b', format = 'mailto:$0' },
     }
 
     -- 使用用户自定义规则或默认规则
     local rules = hyperlink_config and hyperlink_config.rules or default_rules
-
-    -- 应用超链接规则
     config.hyperlink_rules = rules
 
     return config
 end
 
 --- 应用外观配置
---- @param config wezterm.Config 配置对象
+--- @param config table 配置对象
 --- @param user_config table 用户配置
---- @return wezterm.Config 配置对象
+--- @return table 配置对象
 function M.apply(config, user_config)
     -- 获取用户配置或使用默认值
     local appearance_config = user_config.appearance or {}
@@ -289,12 +258,7 @@ end
 --- 获取可用主题列表
 --- @return table 主题名称列表
 function M.get_available_themes()
-    local themes = {}
-    for name, _ in pairs(constants.THEMES) do
-        table.insert(themes, name)
-    end
-    table.sort(themes)
-    return themes
+    return constants.list()
 end
 
 --- 创建自定义主题
@@ -303,7 +267,7 @@ end
 --- @return boolean 是否成功
 function M.create_custom_theme(theme_name, theme_colors)
     if not theme_colors or type(theme_colors) ~= "table" then
-        wezterm.log_error("Invalid theme colors")
+        logger.error("appearance", "Invalid theme colors")
         return false
     end
 
@@ -315,13 +279,14 @@ function M.create_custom_theme(theme_name, theme_colors)
 
     for _, field in ipairs(required_fields) do
         if not theme_colors[field] then
-            wezterm.log_error("Missing required field: " .. field)
+            logger.error("appearance", "Missing required field: " .. field)
             return false
         end
     end
 
     -- 保存自定义主题
-    constants.THEMES[theme_name] = theme_colors
+    local themes = require("ghost.constants.themes")
+    themes[theme_name] = theme_colors
     return true
 end
 

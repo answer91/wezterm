@@ -1,9 +1,15 @@
 -- Shell集成配置
 -- 提供自动Shell检测、项目切换Shell、环境变量管理功能
+-- 使用 package.loaded 避免循环引用
 
-local wezterm = require("wezterm")
-local utils = require("ghost.core.utils")
-local constants = require("ghost.core.constants")
+local utils = require("ghost.utils.init")
+local constants = require("ghost.constants.init")
+local string_ops = require("ghost.utils.string")
+
+--- 获取 wezterm（延迟加载，使用 package.loaded 避免循环引用）
+local function get_wezterm()
+    return package.loaded["wezterm"]
+end
 
 local M = {}
 
@@ -24,13 +30,8 @@ local ShellManager = {
             return self.current_shell
         end
 
-        local shell = utils.get_default_shell()
-        if shell then
-            self.current_shell = shell
-        else
-            -- 回退到系统默认
-            self.current_shell = os.getenv("SHELL") or "/bin/bash"
-        end
+        -- 回退到系统默认
+        self.current_shell = os.getenv("SHELL") or "/bin/bash"
 
         return self.current_shell
     end,
@@ -83,7 +84,7 @@ local ShellManager = {
 --- @return table SSH主机列表
 local function parse_ssh_config(ssh_config_path)
     local hosts = {}
-    local content = utils.read_file(ssh_config_path)
+    local content = utils.read(ssh_config_path)
 
     if not content then
         return hosts
@@ -123,6 +124,8 @@ end
 --- @param shell_config table Shell配置
 --- @return wezterm.Config 配置对象
 local function apply_shell_config(config, shell_config)
+    local wezterm = get_wezterm()
+
     -- 检测或使用指定的Shell
     local shell_path
     if shell_config and shell_config.default_shell then
@@ -136,11 +139,13 @@ local function apply_shell_config(config, shell_config)
     end
 
     -- 验证 Shell 是否存在
-    if utils.file_exists(shell_path) then
+    if utils.exists(shell_path) then
         config.default_prog = { shell_path }
     else
         -- Fish 不存在，回退到系统默认
-        wezterm.log_info("Fish shell not found at " .. shell_path .. ", using system default")
+        if wezterm then
+            wezterm.log_info("Fish shell not found at " .. shell_path .. ", using system default")
+        end
     end
 
     -- 设置环境变量
@@ -223,7 +228,7 @@ end
 function M.get_shell_for_cwd(cwd)
     -- 检查是否有项目特定的Shell
     for project_path, shell_path in pairs(ShellManager.project_shells) do
-        if cwd:startswith(project_path) then
+        if string_ops.starts_with(cwd, project_path) then
             return shell_path
         end
     end

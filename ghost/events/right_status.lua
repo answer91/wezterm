@@ -1,7 +1,6 @@
 -- 右侧状态栏事件
 -- 负责显示右侧状态栏，包括时间等信息
-
-local wezterm = require("wezterm")
+-- 使用 package.loaded 避免循环引用
 
 local M = {}
 
@@ -27,6 +26,9 @@ end
 --- 注册事件到 wezterm
 ---@param user_opts table|nil 用户配置
 function M.register(user_opts)
+    local wezterm = package.loaded["wezterm"]
+    if not wezterm then return end
+
     setup_opts(user_opts)
 
     wezterm.on("update-right-status", function(window, _pane)

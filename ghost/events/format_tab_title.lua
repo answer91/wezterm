@@ -1,13 +1,12 @@
 -- 标签页标题格式化事件
 -- 负责格式化标签页标题，显示进程名和工作目录
 -- 显示格式: 进程名 ~ 目录名
-
-local wezterm = require("wezterm")
+-- 使用 package.loaded 避免循环引用
 
 local M = {}
 
 --- 格式化标签页标题
---- 显示格式: 进程名 ~ 目录名   时间
+--- 显示格式: 进程名 ~ 目录名
 --- @param tab_info TabInformation 标签页信息
 --- @param _tabs table 所有标签页
 --- @param _panes table 所有窗格
@@ -35,6 +34,9 @@ end
 
 --- 注册事件到 wezterm
 function M.register()
+    local wezterm = package.loaded["wezterm"]
+    if not wezterm then return end
+
     wezterm.on("format-tab-title", M.format)
 end
 

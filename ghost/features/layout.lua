@@ -1,9 +1,13 @@
 -- 分屏布局管理
 -- 提供预设布局和自定义布局保存功能
 
-local wezterm = require("wezterm")
-local utils = require("ghost.core.utils")
-local constants = require("ghost.core.constants")
+-- 获取 wezterm（延迟加载，使用 package.loaded 避免循环引用）
+local function get_wezterm()
+    return package.loaded["wezterm"]
+end
+
+local utils = require("ghost.utils.init")
+local constants = require("ghost.constants.init")
 
 local M = {}
 
