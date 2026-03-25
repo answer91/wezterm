@@ -99,4 +99,22 @@ function M.save_json(path, data)
     return false
 end
 
+--- 文件名匹配函数（glob）
+--- @param pattern string 文件匹配模式
+--- @return table 匹配的文件列表
+function M.glob(pattern)
+    local wezterm = get_wezterm()
+    if not wezterm then
+        return {}
+    end
+
+    -- 使用wezterm的glob功能，直接返回结果
+    local success, result = pcall(wezterm.glob, pattern)
+    if success and result then
+        return result
+    end
+
+    return {}
+end
+
 return M

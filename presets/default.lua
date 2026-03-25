@@ -34,6 +34,11 @@ return {
             -- image_path = "background.png",  -- 图片文件名，放在pictures目录
             -- opacity = 0.8,
             -- blur = 20,
+            -- 注意：启用背景切换器后，可以使用快捷键切换背景：
+            -- Ctrl+Alt+B - 下一个背景
+            -- Ctrl+Shift+Alt+B - 上一个背景
+            -- Ctrl+Alt+R - 随机背景
+            -- Ctrl+Alt+T - 启用/停用自动轮播
         },
 
         -- 窗口配置

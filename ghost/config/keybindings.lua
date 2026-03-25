@@ -151,6 +151,12 @@ function M.apply(config, user_config)
     -- 应用默认快捷键
     config = apply_default_keys(config)
 
+    -- 集成背景切换快捷键
+    local ok, background_switcher = pcall(require, "ghost.features.background_switcher")
+    if ok and background_switcher then
+        config = background_switcher.create_keybindings(config)
+    end
+
     -- 应用Leader模式（默认启用）
     local leader_cfg = keybindings_config.leader or {}
     if leader_cfg.enabled ~= false then

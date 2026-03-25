@@ -29,6 +29,7 @@ M.get_home_dir = file_ops.get_home_dir
 M.load_lua_file = file_ops.load_lua_file
 M.load_json = file_ops.load_json
 M.save_json = file_ops.save_json
+M.glob = file_ops.glob
 
 --- 兼容旧代码的工具函数集合
 M.utils = {

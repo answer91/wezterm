@@ -41,6 +41,12 @@ local function apply_modules()
         config = shell.apply(config, {})
     end
 
+    -- 背景切换器（最后初始化，覆盖外观设置的背景）
+    ok, background_switcher = pcall(require, "ghost.features.background_switcher")
+    if ok and background_switcher then
+        config = background_switcher.setup(config)
+    end
+
     return config
 end
 
