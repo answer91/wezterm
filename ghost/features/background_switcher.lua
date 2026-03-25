@@ -228,6 +228,16 @@ function M.setup(config)
         config.background = {
             {
                 source = { File = { path = current_bg } },
+
+                --- 图片对齐方式（分辨率控制）
+                horizontal_align = "Center",   -- Left, Center, Right
+                vertical_align = "Middle",      -- Top, Middle, Bottom
+
+                --- 重复模式
+                repeat_x = "NoRepeat",         -- NoRepeat, Repeat, Mirror
+                repeat_y = "NoRepeat",         -- NoRepeat, Repeat, Mirror
+
+                --- 透明度和颜色调整
                 opacity = 1,
                 hsb = {
                     brightness = 0.3,
