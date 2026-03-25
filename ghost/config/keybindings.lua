@@ -2,9 +2,7 @@
 -- 提供模块化的快捷键管理，支持多种模式和自定义覆盖
 -- 使用 package.loaded 避免循环引用
 
-local module = require("ghost.core.module")
 local constants = require("ghost.constants.init")
-local logger = require("ghost.core.logger")
 
 --- 获取 wezterm（延迟加载，使用 package.loaded 避免循环引用）
 local function get_wezterm()
@@ -61,50 +59,6 @@ local KeyTableManager = {
 --- @return wezterm.Config 配置对象
 local function apply_default_keys(config)
     config.keys = constants.DEFAULT_KEYBINDINGS
-    return config
-end
-
---- 应用Leader模式快捷键
---- @param config wezterm.Config 配置对象
---- @param leader_config table Leader配置
---- @return wezterm.Config 配置对象
-local function apply_leader_mode(config, leader_config)
-    if not leader_config or not leader_config.enabled then
-        return config
-    end
-
-    local leader_key = leader_config.key or "Space"
-    local leader_mods = leader_config.mods or "CTRL"
-    local timeout = leader_config.timeout or 1000
-
-    config.leader = { key = leader_key, mods = leader_mods, timeout_milliseconds = timeout }
-
-    -- Leader模式下的快捷键
-    local wezterm = get_wezterm()
-    local leader_keys = {
-        { key = "c", mods = "LEADER", action = wezterm.action.CopyTo("Clipboard") },
-        { key = "v", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
-        { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
-        { key = "w", mods = "LEADER", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
-        { key = "-", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
-        { key = "\\", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-        { key = "s", mods = "LEADER", action = wezterm.action.Search("CurrentSelectionOrEmptyString") },
-        { key = "r", mods = "LEADER", action = wezterm.action.ActivateKeyTable {
-            name = "resize_mode",
-            one_shot = false,
-        }},
-        { key = "a", mods = "LEADER", action = wezterm.action.ActivateKeyTable {
-            name = "activate_pane_mode",
-            one_shot = false,
-        }},
-    }
-
-    -- 注册Leader键表
-    KeyTableManager:register("leader_mode", leader_keys)
-
-    -- 合并到配置
-    config.keys = KeyTableManager:merge(config.keys or {}, leader_keys)
-
     return config
 end
 
