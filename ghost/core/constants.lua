@@ -52,7 +52,7 @@ M.THEMES = {
         },
 
         tab_bar = {
-            background = "#0a0a0a",
+            background = 'rgba(0, 0, 0, 0.4)',
             active_tab = { bg_color = "#9d00ff", fg_color = "#ffffff" },
             inactive_tab = { bg_color = "#1a1a1a", fg_color = "#888888" },
             inactive_tab_hover = { bg_color = "#2a2a2a", fg_color = "#aaaaaa" },

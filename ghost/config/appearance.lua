@@ -189,8 +189,12 @@ end
 --- @return wezterm.Config 配置对象
 local function apply_cursor(config, cursor_config)
     if cursor_config then
-        config.default_cursor_style = cursor_config.style or "SteadyBlock"
+        config.default_cursor_style = cursor_config.style or "BlinkingBlock"
         config.cursor_blink_rate = cursor_config.blink_rate or 800
+    else
+        -- 默认光标样式
+        config.default_cursor_style = "BlinkingBlock"
+        config.cursor_blink_rate = 800
     end
 
     return config

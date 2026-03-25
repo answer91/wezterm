@@ -7,9 +7,9 @@ local M = {}
 
 --- 配置选项
 ---@class RightStatusOptions
----@field date_format string 时间格式，默认 '%H:%M'
+---@field date_format string 时间格式，默认 '%a %H:%M:%S'
 local default_opts = {
-    date_format = "%H:%M:%S",
+    date_format = "%a %H:%M:%S", -- 星期 时:分:秒
 }
 
 --- 当前配置
@@ -33,6 +33,9 @@ function M.register(user_opts)
         local time_text = wezterm.strftime(opts.date_format)
 
         window:set_right_status(wezterm.format({
+            -- 使用与标签栏一致的颜色
+            { Background = { Color = "#00aaff" } },
+            { Foreground = { Color = "#9d00ff" } }, -- 紫色，与激活标签背景一致
             { Text = time_text },
         }))
     end)
