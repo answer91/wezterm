@@ -31,7 +31,7 @@ local M = {
     DEFAULT_BACKGROUND = {
         enabled = true,
         type = "image",
-        image_path = "sword.jpg",
+        image_path = "kobe-3.jpg",
         image_opacity = 1,
     },
 

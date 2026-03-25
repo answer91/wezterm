@@ -35,6 +35,12 @@ local function apply_modules()
         config = keybindings.apply(config, {})
     end
 
+    -- Shell配置
+    ok, shell = pcall(require, "ghost.config.shell")
+    if ok and shell then
+        config = shell.apply(config, {})
+    end
+
     return config
 end
 
