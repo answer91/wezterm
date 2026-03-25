@@ -196,6 +196,58 @@ local function apply_cursor(config, cursor_config)
     return config
 end
 
+--- 配置超链接高亮
+--- @param config wezterm.Config 配置对象
+--- @param hyperlink_config table|nil 超链接配置
+--- @return wezterm.Config 配置对象
+local function apply_hyperlinks(config, hyperlink_config)
+    -- 默认超链接高亮规则
+    local default_rules = {
+        -- URL in parens: (URL)
+        {
+            regex = '\\(\\w+://\\S+\\)',
+            format = '$1',
+            highlight = 1,
+        },
+        -- URL in brackets: [URL]
+        {
+            regex = '\\[\\w+://\\S+\\]',
+            format = '$1',
+            highlight = 1,
+        },
+        -- URL in curly braces: {URL}
+        {
+            regex = '\\{\\w+://\\S+\\}',
+            format = '$1',
+            highlight = 1,
+        },
+        -- URL in angle brackets: <URL>
+        {
+            regex = '<\\w+://\\S+>',
+            format = '$1',
+            highlight = 1,
+        },
+        -- Then handle URLs not wrapped in brackets
+        {
+            regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
+            format = '$0',
+        },
+        -- implicit mailto link
+        {
+            regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
+            format = 'mailto:$0',
+        },
+    }
+
+    -- 使用用户自定义规则或默认规则
+    local rules = hyperlink_config and hyperlink_config.rules or default_rules
+
+    -- 应用超链接规则
+    config.hyperlink_rules = rules
+
+    return config
+end
+
 --- 应用外观配置
 --- @param config wezterm.Config 配置对象
 --- @param user_config table 用户配置
@@ -223,6 +275,9 @@ function M.apply(config, user_config)
 
     -- 应用光标配置
     config = apply_cursor(config, appearance_config.cursor)
+
+    -- 应用超链接高亮配置
+    config = apply_hyperlinks(config, appearance_config.hyperlinks)
 
     return config
 end

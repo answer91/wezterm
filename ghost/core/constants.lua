@@ -57,16 +57,28 @@ M.THEMES = {
             inactive_tab = { bg_color = "#1a1a1a", fg_color = "#888888" },
             inactive_tab_hover = { bg_color = "#2a2a2a", fg_color = "#aaaaaa" },
             new_tab = { bg_color = "#1a1a1a", fg_color = "#39ff14" },
-            new_tab_hover = { bg_color = "#2a2a2a", fg_color = "#55ff55", italic = true},
+            new_tab_hover = { bg_color = "#2a2a2a", fg_color = "#55ff55", italic = true },
         },
 
         ansi = {
-            "#000000", "#ff0055", "#39ff14", "#ffff00",
-            "#00aaff", "#9d00ff", "#00ffff", "#ffffff",
+            '#0C0C0C', -- black
+            '#C50F1F', -- red
+            'FF8DA10E', -- green
+            '#C19C00', -- yellow
+            '#0037DA', -- blue
+            '#881798', -- magenta/purple
+            '#3A96DD', -- cyan
+            '#CCCCCC', -- white
         },
         brights = {
-            "#555555", "#ff5588", "#55ff55", "#ffff55",
-            "#55aaff", "#d455ff", "#55ffff", "#ffffff",
+            '#767676', -- black
+            '#E74856', -- red
+            'FF9BC60C', -- green
+            '#F9F1A5', -- yellow
+            '#3B78FF', -- blue
+            '#B4009E', -- magenta/purple
+            '#61D6D6', -- cyan
+            '#F2F2F2', -- white
         },
     },
 
@@ -100,7 +112,7 @@ M.THEMES = {
             inactive_tab = { bg_color = "#1a1a1a", fg_color = "#888888" },
             inactive_tab_hover = { bg_color = "#2a2a2a", fg_color = "#aaaaaa" },
             new_tab = { bg_color = "#1a1a1a", fg_color = "#ff6600" },
-            new_tab_hover = { bg_color = "#2a2a2a", fg_color = "#ff9933", italic = true},
+            new_tab_hover = { bg_color = "#2a2a2a", fg_color = "#ff9933", italic = true },
         },
 
         ansi = {
@@ -169,42 +181,42 @@ M.MOD_KEYS = {
 
 M.DEFAULT_KEYBINDINGS = {
     -- ========== 功能键 ==========
-    { key = "F1", mods = "NONE", action = "ActivateCopyMode" },
-    { key = "F2", mods = "NONE", action = wezterm.action.ActivateCommandPalette },
-    { key = "F3", mods = "NONE", action = wezterm.action.ShowLauncher },
-    { key = "F4", mods = "NONE", action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
-    { key = "F5", mods = "NONE", action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
-    { key = "F11", mods = "NONE", action = wezterm.action.ToggleFullScreen },
-    { key = "F12", mods = "NONE", action = wezterm.action.ShowDebugOverlay },
+    { key = "F1",  mods = "NONE",       action = "ActivateCopyMode" },
+    { key = "F2",  mods = "NONE",       action = wezterm.action.ActivateCommandPalette },
+    { key = "F3",  mods = "NONE",       action = wezterm.action.ShowLauncher },
+    { key = "F4",  mods = "NONE",       action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|TABS" }) },
+    { key = "F5",  mods = "NONE",       action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+    { key = "F11", mods = "NONE",       action = wezterm.action.ToggleFullScreen },
+    { key = "F12", mods = "NONE",       action = wezterm.action.ShowDebugOverlay },
 
     -- ========== 基础操作 ==========
-    { key = "c", mods = "CTRL|SHIFT", action = wezterm.action.CopyTo("Clipboard") },
-    { key = "v", mods = "CTRL|SHIFT", action = wezterm.action.PasteFrom("Clipboard") },
+    { key = "c",   mods = "CTRL|SHIFT", action = wezterm.action.CopyTo("Clipboard") },
+    { key = "v",   mods = "CTRL|SHIFT", action = wezterm.action.PasteFrom("Clipboard") },
 
     -- ========== 标签页操作 ==========
     -- 标签页：新建和关闭
-    { key = "t", mods = "ALT", action = wezterm.action.SpawnTab("DefaultDomain") },
-    { key = "w", mods = "ALT|CTRL", action = wezterm.action.CloseCurrentTab({ confirm = false }) },
+    { key = "t",   mods = "ALT",        action = wezterm.action.SpawnTab("DefaultDomain") },
+    { key = "w",   mods = "ALT|CTRL",   action = wezterm.action.CloseCurrentTab({ confirm = false }) },
 
     -- 标签页：导航
-    { key = "[", mods = "ALT", action = wezterm.action.ActivateTabRelative(-1) },
-    { key = "]", mods = "ALT", action = wezterm.action.ActivateTabRelative(1) },
-    { key = "[", mods = "ALT|CTRL", action = wezterm.action.MoveTabRelative(-1) },
-    { key = "]", mods = "ALT|CTRL", action = wezterm.action.MoveTabRelative(1) },
+    { key = "[",   mods = "ALT",        action = wezterm.action.ActivateTabRelative(-1) },
+    { key = "]",   mods = "ALT",        action = wezterm.action.ActivateTabRelative(1) },
+    { key = "[",   mods = "ALT|CTRL",   action = wezterm.action.MoveTabRelative(-1) },
+    { key = "]",   mods = "ALT|CTRL",   action = wezterm.action.MoveTabRelative(1) },
 
     -- 标签页：数字切换
-    { key = "1", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(0) },
-    { key = "2", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(1) },
-    { key = "3", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(2) },
-    { key = "4", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(3) },
-    { key = "5", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(4) },
-    { key = "6", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(5) },
-    { key = "7", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(6) },
-    { key = "8", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(7) },
-    { key = "9", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(-1) },
+    { key = "1",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(0) },
+    { key = "2",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(1) },
+    { key = "3",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(2) },
+    { key = "4",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(3) },
+    { key = "5",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(4) },
+    { key = "6",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(5) },
+    { key = "7",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(6) },
+    { key = "8",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(7) },
+    { key = "9",   mods = "CTRL|SHIFT", action = wezterm.action.ActivateTab(-1) },
 
     -- ========== 窗口操作 ==========
-    { key = "n", mods = "ALT", action = wezterm.action.SpawnWindow },
+    { key = "n",   mods = "ALT",        action = wezterm.action.SpawnWindow },
     {
         key = "Enter",
         mods = "ALT|CTRL",
@@ -215,18 +227,18 @@ M.DEFAULT_KEYBINDINGS = {
 
     -- ========== 窗格操作 ==========
     -- 窗格：分割
-    { key = "\\", mods = "ALT", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
-    { key = "\\", mods = "ALT|CTRL", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+    { key = "\\",    mods = "ALT",      action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+    { key = "\\",    mods = "ALT|CTRL", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 
     -- 窗格：缩放和关闭
-    { key = "Enter", mods = "ALT", action = wezterm.action.TogglePaneZoomState },
-    { key = "w", mods = "ALT", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
+    { key = "Enter", mods = "ALT",      action = wezterm.action.TogglePaneZoomState },
+    { key = "w",     mods = "ALT",      action = wezterm.action.CloseCurrentPane({ confirm = false }) },
 
     -- 窗格：导航（Vim风格）
-    { key = "h", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
-    { key = "j", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Down") },
-    { key = "k", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Up") },
-    { key = "l", mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
+    { key = "h",     mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
+    { key = "j",     mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Down") },
+    { key = "k",     mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Up") },
+    { key = "l",     mods = "ALT|CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
 
     -- 窗格：快速选择和交换
     {
@@ -236,40 +248,40 @@ M.DEFAULT_KEYBINDINGS = {
     },
 
     -- 窗格：滚动
-    { key = "u", mods = "ALT", action = wezterm.action.ScrollByLine(-5) },
-    { key = "d", mods = "ALT", action = wezterm.action.ScrollByLine(5) },
-    { key = "PageUp", mods = "NONE", action = wezterm.action.ScrollByPage(-0.75) },
-    { key = "PageDown", mods = "NONE", action = wezterm.action.ScrollByPage(0.75) },
+    { key = "u",        mods = "ALT",        action = wezterm.action.ScrollByLine(-5) },
+    { key = "d",        mods = "ALT",        action = wezterm.action.ScrollByLine(5) },
+    { key = "PageUp",   mods = "NONE",       action = wezterm.action.ScrollByPage(-0.75) },
+    { key = "PageDown", mods = "NONE",       action = wezterm.action.ScrollByPage(0.75) },
 
     -- ========== 字体大小调整 ==========
-    { key = "=", mods = "CTRL|SHIFT", action = wezterm.action.IncreaseFontSize },
-    { key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
-    { key = "0", mods = "CTRL|SHIFT", action = wezterm.action.ResetFontSize },
+    { key = "=",        mods = "CTRL|SHIFT", action = wezterm.action.IncreaseFontSize },
+    { key = "-",        mods = "CTRL",       action = wezterm.action.DecreaseFontSize },
+    { key = "0",        mods = "CTRL|SHIFT", action = wezterm.action.ResetFontSize },
 
     -- ========== 搜索 ==========
-    { key = "f", mods = "ALT", action = wezterm.action.Search({ CaseInSensitiveString = "" }) },
+    { key = "f",        mods = "ALT",        action = wezterm.action.Search({ CaseInSensitiveString = "" }) },
 
     -- ========== 其他 ==========
-    { key = "r", mods = "CTRL|SHIFT", action = wezterm.action.ReloadConfiguration },
+    { key = "r",        mods = "CTRL|SHIFT", action = wezterm.action.ReloadConfiguration },
 }
 
 -- ==================== 键表（Key Tables）====================
 
 M.KEY_TABLES = {
     resize_font = {
-        { key = "k", action = wezterm.action.IncreaseFontSize },
-        { key = "j", action = wezterm.action.DecreaseFontSize },
-        { key = "r", action = wezterm.action.ResetFontSize },
+        { key = "k",      action = wezterm.action.IncreaseFontSize },
+        { key = "j",      action = wezterm.action.DecreaseFontSize },
+        { key = "r",      action = wezterm.action.ResetFontSize },
         { key = "Escape", action = "PopKeyTable" },
-        { key = "q", action = "PopKeyTable" },
+        { key = "q",      action = "PopKeyTable" },
     },
     resize_pane = {
-        { key = "k", action = wezterm.action.AdjustPaneSize({ "Up", 1 }) },
-        { key = "j", action = wezterm.action.AdjustPaneSize({ "Down", 1 }) },
-        { key = "h", action = wezterm.action.AdjustPaneSize({ "Left", 1 }) },
-        { key = "l", action = wezterm.action.AdjustPaneSize({ "Right", 1 }) },
+        { key = "k",      action = wezterm.action.AdjustPaneSize({ "Up", 1 }) },
+        { key = "j",      action = wezterm.action.AdjustPaneSize({ "Down", 1 }) },
+        { key = "h",      action = wezterm.action.AdjustPaneSize({ "Left", 1 }) },
+        { key = "l",      action = wezterm.action.AdjustPaneSize({ "Right", 1 }) },
         { key = "Escape", action = "PopKeyTable" },
-        { key = "q", action = "PopKeyTable" },
+        { key = "q",      action = "PopKeyTable" },
     },
 }
 
