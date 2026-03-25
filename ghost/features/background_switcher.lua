@@ -35,9 +35,9 @@ local BackgroundSwitcher = {
     initialized = false,
 
     --- 初始化背景列表
-    init = function(self)
-        -- 避免重复初始化
-        if self.initialized then
+    init = function(self, force)
+        -- 避免重复初始化（除非强制）
+        if self.initialized and not force then
             return
         end
 
@@ -55,25 +55,52 @@ local BackgroundSwitcher = {
         self.initialized = true
     end,
 
+    --- 强制重新扫描背景图片
+    force_rescan = function(self)
+        logger.info("background_switcher", "Forcing background rescan...")
+        self.initialized = false
+        self:init(true)
+    end,
+
     --- 扫描背景图片目录
     --- @return table 背景图片列表
     scan_backgrounds = function(self)
         local backgrounds = {}
         local pictures_dir = self.config_dir .. "/pictures"
 
-        -- 已知的背景图片文件
-        local known_files = {
-            "kobe-1.jpg",
-            "kobe-2.jpg",
-            "kobe-3.jpg",
-            "sword.jpg",
-        }
+        -- 支持的图片格式
+        local extensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" }
 
-        -- 检查每个文件是否存在
-        for _, filename in ipairs(known_files) do
-            local filepath = pictures_dir .. "/" .. filename
-            if utils.exists(filepath) then
-                table.insert(backgrounds, filepath)
+        -- 使用wezterm.glob扫描图片文件
+        local wezterm = get_wezterm()
+        if wezterm then
+            for _, ext in ipairs(extensions) do
+                local pattern = pictures_dir .. "/*" .. ext
+                local success, files = pcall(wezterm.glob, pattern)
+
+                if success and files then
+                    for _, file in ipairs(files) do
+                        table.insert(backgrounds, file)
+                    end
+                end
+            end
+        end
+
+        -- 如果glob没有工作，回退到手动检查已知文件
+        if #backgrounds == 0 then
+            local known_files = {
+                "kobe-1.jpg",
+                "kobe-2.jpg",
+                "kobe-3.jpg",
+                "kobe-4.jpg",
+                "curry-1.jpg",
+            }
+
+            for _, filename in ipairs(known_files) do
+                local filepath = pictures_dir .. "/" .. filename
+                if utils.exists(filepath) then
+                    table.insert(backgrounds, filepath)
+                end
             end
         end
 
@@ -319,6 +346,18 @@ function M.create_keybindings(config)
             BackgroundSwitcher:toggle_auto_rotate()
             local status = BackgroundSwitcher.auto_rotate and "enabled" or "disabled"
             window:toast_notification("Background Switcher", "Auto rotate " .. status, nil, 4000)
+        end),
+    })
+
+    -- 重新扫描背景图片 (Ctrl+Alt+F)
+    table.insert(config.keys, {
+        key = "f",
+        mods = "CTRL|ALT",
+        action = wezterm.action_callback(function(window)
+            BackgroundSwitcher:force_rescan()
+            local count = #BackgroundSwitcher.backgrounds
+            window:toast_notification("Background Switcher", "Rescanned: " .. count .. " backgrounds found", nil, 4000)
+            wezterm.reload_configuration()
         end),
     })
 
