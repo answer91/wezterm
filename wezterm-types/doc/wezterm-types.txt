@@ -1,0 +1,258 @@
+*wezterm-types.txt*        For NVIM >=v0.7.0        Last change: 2026 April 13
+
+==============================================================================
+1. wezterm-types                                 *wezterm-types-wezterm-types*
+
+
+
+This project aims to provide LuaCATS-like LuaLS type annotations
+<https://luals.github.io/wiki/annotations/> for your WezTerm
+<https://github.com/wezterm/wezterm> config.
+
+Example videos can be found in EXAMPLES.md
+<https://github.com/DrKJeff16/wezterm-types/blob/main/EXAMPLES.md>.
+
+NOTE: For any missing or unclear types you should always double-check the
+WezTerm Lua Reference <https://wezterm.org/config/lua/general.html>. If using
+an annotated plugin featured in this repository please refer to its author for
+any unclear types.
+
+
+FEATURES                                              *wezterm-types-features*
+
+- LuaCATS-like type annotations
+- Built-in colorschemes included (`config.color_scheme`)
+- Up-to-date descriptions
+- Community plugin annotations
+- Neovim support
+    - Through lazydev.nvim
+    - Through the built-in LSP API
+- VSCode/VSCodium support by cloning this into `~/.config/wezterm`, then editing your config
+    in that directory
+
+------------------------------------------------------------------------------
+
+TABLE OF CONTENTS                            *wezterm-types-table-of-contents*
+
+- |wezterm-types-installation|
+- |wezterm-types-featured-plugins|
+- |wezterm-types-usage|
+
+------------------------------------------------------------------------------
+
+INSTALLATION                                      *wezterm-types-installation*
+
+
+LUAROCKS ~
+
+You can install `wezterm-types` using LuaRocks:
+
+>bash
+    luarocks install wezterm-types # Global install
+    luarocks install --local wezterm-types # Local install
+<
+
+To get it running in Neovim please refer to this discussion
+<https://github.com/DrKJeff16/wezterm-types/discussions/93>.
+
+
+NEOVIM ~
+
+We recommend using folke/lazy.nvim <https://github.com/folke/lazy.nvim> as a
+package manager:
+
+>lua
+    {
+      'DrKJeff16/wezterm-types',
+      version = false, -- Get the latest version
+    },
+<
+
+------------------------------------------------------------------------------
+
+FEATURED PLUGINS                              *wezterm-types-featured-plugins*
+
+This project also features type annotations for various WezTerm plugins.
+
+**If you want to add your plugin, please read CONTRIBUTING.md.**
+
+  -------------------------------------------------------------------------------------------------------------------------
+  Plugin                             Documentation                      Neovim Help
+  ---------------------------------- ---------------------------------- ---------------------------------------------------
+  ai-commander.wezterm               docs/ai-commander.md               :h wezterm-types-plugin.ai-commander.txt
+
+  ai-helper.wezterm                  docs/ai-helper.md                  :h wezterm-types-plugin.ai-helper.txt
+
+  bar.wezterm                        docs/bar.md                        :h wezterm-types-plugin.bar.txt
+
+  battery.wez                        docs/battery.md                    :h wezterm-types-plugin.battery.txt
+
+  dev.wezterm                        docs/dev.md                        :h wezterm-types-plugin.dev.txt
+
+  kanagawa.wz                        docs/kanagawa.md                   :h wezterm-types-plugin.kanagawa.txt
+
+  lib.wezterm                        docs/lib.md                        :h wezterm-types-plugin.lib.txt
+
+  listeners.wezterm                  docs/listeners.md                  :h wezterm-types-plugin.listeners.txt
+
+  log.wz                             docs/log.md                        :h wezterm-types-plugin.log.txt
+
+  memo.wz                            docs/memo.md                       :h wezterm-types-plugin.memo.txt
+
+  modal.wezterm                      docs/modal.md                      :h wezterm-types-plugin.modal.txt
+
+  passrelay.wezterm                  docs/passrelay.md                  :h wezterm-types-plugin.passrelay.txt
+
+  pinned-tabs.wezterm                docs/pinned-tabs.md                :h wezterm-types-plugin.pinned-tabs.txt
+
+  pivot_panes.wezterm                docs/pivot-panes.md                :h wezterm-types-plugin.pivot-panes.txt
+
+  presentation.wez                   docs/presentation.md               :h wezterm-types-plugin.presentation.txt
+
+  quick_domains.wezterm              docs/quick-domains.md              :h wezterm-types-plugin.quick_domains.txt
+
+  quickselect.wezterm                docs/quickselect.md                :h wezterm-types-plugin.quickselect.txt
+
+  resurrect.wezterm                  docs/resurrect.md                  :h wezterm-types-plugin.resurrect.txt
+
+  rosepine                           docs/rosepine.md                   :h wezterm-types-plugin.rosepine.txt
+
+  sessionizer.wezterm                docs/sessionizer.md                :h wezterm-types-plugin.sessionizer.txt
+
+  smart-splits.nvim                  docs/smart-splits.md               :h wezterm-types-plugin.smart-splits.txt
+
+  smart_workspace_switcher.wezterm   docs/smart-workspace-switcher.md   :h
+                                                                        wezterm-types-plugin.smart_workspace_switcher.txt
+
+  stack.wez                          docs/stack.md                      :h wezterm-types-plugin.stack.txt
+
+  tabline.wez                        docs/tabline.md                    :h wezterm-types-plugin.tabline.txt
+
+  tabsets.wezterm                    docs/tabsets.md                    :h wezterm-types-plugin.tabsets.txt
+
+  toggle_terminal.wez                docs/toggle-terminal.md            :h wezterm-types-plugin.toggle-terminal.txt
+
+  warp.wz                            docs/warp.md                       :h wezterm-types-plugin.warp.txt
+
+  wez-pain-control                   docs/wez-pain-control.md           :h wezterm-types-plugin.wez-pain-control.txt
+
+  wez-tmux                           docs/wez-tmux.md                   :h wezterm-types-plugin.wez-tmux.txt
+
+  wezterm-agent-deck                 docs/agent-deck.md                 :h wezterm-types-plugin.agent-deck.txt
+
+  wezterm-attention                  docs/attention.md                  :h wezterm-types-plugin.wezterm-attention.txt
+
+  wezterm-cmd-sender                 docs/cmd-sender.md                 :h wezterm-types-plugin.cmd-sender.txt
+
+  wezterm-cmdpicker                  docs/cmdpicker.md                  :h wezterm-types-plugin.cmdpicker.txt
+
+  wezterm-config.nvim                docs/wezterm-config.md             :h wezterm-types-plugin.wezterm-config.txt
+
+  wezterm-quota-limit                docs/quota-limit.md                :h wezterm-types-plugin.quota-limit.txt
+
+  wezterm-replay                     docs/replay.md                     :h wezterm-types-plugin.replay.txt
+
+  wezterm-sessions                   docs/wezterm-sessions.md           :h wezterm-types-plugin.wezterm-sessions.txt
+
+  wezterm-status                     docs/wezterm-status.md             :h wezterm-types-plugin.wezterm-status.txt
+
+  wezterm-tabs                       docs/wezterm-tabs.md               :h wezterm-types-plugin.wezterm-tabs.txt
+
+  wezterm-theme-rotator              docs/wezterm-theme-rotator.md      :h wezterm-types-plugin.wezterm-theme-rotator.txt
+
+  workspace-picker.wezterm           docs/workspace-picker.md           :h wezterm-types-plugin.workspace-picker.txt
+
+  workspacesionizer.wezterm          docs/workspacesionizer.md          :h wezterm-types-plugin.workspacesionizer.txt
+
+  wsinit.wezterm                     docs/wsinit.md                     :h wezterm-types-plugin.wsinit.txt
+  -------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+USAGE                                                    *wezterm-types-usage*
+
+After installing the types, add the type annotations to `wezterm` and `config`
+respectively when running `require("wezterm")` in your configuration.
+
+A useful example:
+
+>lua
+    local wezterm = require("wezterm") ---@type Wezterm
+    local config = wezterm.config_builder() ---@type Config
+    
+    config.window_decorations = "RESIZE|MACOS_FORCE_DISABLE_SHADOW"
+    
+    return config
+<
+
+These annotations enable the **Lua Language Server** to provide proper type
+checking and autocompletion for WezTerm configuration options.
+
+
+USING LAZYDEV.NVIM ~
+
+Install lazydev.nvim <https://github.com/folke/lazydev.nvim> as suggested:
+
+>lua
+    {
+      'folke/lazydev.nvim',
+      ft = 'lua',
+      dependencies = { 'DrKJeff16/wezterm-types' },
+      opts = {
+        library = {
+          -- Other library configs...
+          { path = 'wezterm-types', mods = { 'wezterm' } },
+        },
+      },
+    }
+<
+
+If you download this repo under a diferent name, you can use the following
+instead:
+
+>lua
+    {
+      'folke/lazydev.nvim',
+      ft = 'lua',
+      dependencies = {
+        {
+          'DrKJeff16/wezterm-types',
+          name = '<my_custom_name>', -- CUSTOM DIRECTORY NAME
+        },
+      },
+      opts = {
+        library = {
+          -- MAKE SURE TO MATCH THE PLUGIN DIRECTORY'S NAME
+          { path = '<my_custom_name>', mods = { 'wezterm' } },
+        },
+      },
+    }
+<
+
+
+USING THE BUILT-IN NEOVIM LSP ~
+
+Add the install path of `wezterm-types` in your `lua_ls` config.
+
+>lua
+    return {
+      cmd = { 'lua-language-server' },
+      filetypes = { 'lua' },
+      settings = {
+        Lua = {
+          workspace = {
+            library = {
+              -- Other library paths...
+              '</path/to/wezterm-types>',
+            },
+          },
+        },
+      },
+    }
+<
+
+------------------------------------------------------------------------------
+
+
+Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
+
+vim:tw=78:ts=8:noet:ft=help:norl:

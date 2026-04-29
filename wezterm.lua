@@ -1,0 +1,29 @@
+-- wezterm.lua
+local wezterm = require 'wezterm' ---@type Wezterm
+local config = wezterm.config_builder() ---@type Config
+local mux = wezterm.mux ---@type Mux
+
+-- 内置主题配置
+-- Zenburn (Gogh)
+-- Catppuccin Mocha (Gogh)
+config.color_scheme = "zenburned"
+config.default_prog = { "/usr/bin/fish" }
+
+-- 加载本地插件
+-- local bar = require("bar_init")
+-- bar.apply_to_config(config)
+
+local tabline = require("tabline_init")
+tabline.setup({ options = { theme = "zenburned" } })
+tabline.apply_to_config(config)
+config.tab_bar_at_bottom = true
+config.status_update_interval = 500
+
+-- 最大化窗口
+wezterm.on("gui-startup", function(cmd)
+    local _, _, window = mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
+end)
+
+
+return config

@@ -1,0 +1,52 @@
+### `wezterm-types` Plugins
+
+This project features support for many community plugins for WezTerm.
+We will keep adding more community plugins as we find them.
+
+### Supported Plugins
+
+- [ai-commander.wezterm](./ai-commander.md)
+- [ai-helper.wezterm](./ai-helper.md)
+- [bar.wezterm](./bar.md)
+- [battery.wez](./battery.md)
+- [dev.wezterm](./dev.md)
+- [kanagawa.wz](./kanagawa.md)
+- [lib.wezterm](./lib.md)
+- [listeners.wezterm](./listeners.md)
+- [log.wz](./log.md)
+- [memo.wz](./memo.md)
+- [modal.wezterm](./modal.md)
+- [passrelay.wezterm](./passrelay.md)
+- [pinned-tabs.wezterm](./pinned-tabs.md)
+- [pivot_panes.wezterm](./pivot-panes.md)
+- [presentation.wez](./presentation.md)
+- [quick_domains.wezterm](./quick-domains.md)
+- [quickselect.wezterm](./quickselect.md)
+- [resurrect.wezterm](./resurrect.md)
+- [rosepine](./rosepine.md)
+- [sessionizer.wezterm](./sessionizer.md)
+- [smart-splits.nvim](./smart-splits.md)
+- [smart_workspace_switcher.wezterm](./smart-workspace-switcher.md)
+- [stack.wez](./stack.md)
+- [tabline.wez](./tabline.md)
+- [tabsets.wezterm](./tabsets.md)
+- [toggle_terminal.wez](./toggle-terminal.md)
+- [warp.wz](./warp.md)
+- [wez-pain-control](./wez-pain-control.md)
+- [wez-tmux](./wez-tmux.md)
+- [wezterm-agent-deck](./agent-deck.md)
+- [wezterm-attention](./attention.md)
+- [wezterm-cmd-sender](./cmd-sender.md)
+- [wezterm-cmdpicker](./cmdpicker.md)
+- [wezterm-config.nvim](./wezterm-config.md)
+- [wezterm-quota-limit](./quota-limit.md)
+- [wezterm-replay](./replay.md)
+- [wezterm-sessions](./wezterm-sessions.md)
+- [wezterm-status](./wezterm-status.md)
+- [wezterm-tabs](./wezterm-tabs.md)
+- [wezterm-theme-rotator](./wezterm-theme-rotator.md)
+- [workspace-picker.wezterm](./workspace-picker.md)
+- [workspacesionizer.wezterm](./workspacesionizer.md)
+- [wsinit.wezterm](./wsinit.md)
+
+<!-- vim: set ts=2 sts=2 sw=2 et ai si sta: -->
