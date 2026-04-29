@@ -9,6 +9,9 @@ local mux = wezterm.mux ---@type Mux
 config.color_scheme = "zenburned"
 config.default_prog = { "/usr/bin/fish" }
 
+-- 插件搜索路径
+package.path = wezterm.config_dir .. "/artificial_plugins/?.lua;" .. wezterm.config_dir .. "/artificial_plugins/?/init.lua;" .. package.path
+
 -- 加载本地插件
 -- local bar = require("bar_init")
 -- bar.apply_to_config(config)
