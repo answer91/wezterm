@@ -86,6 +86,10 @@ function M.get_defaults()
 
         -- 其他
         { key = "r", mods = "CTRL|SHIFT", action = wezterm.action.ReloadConfiguration },
+
+        -- Leader 键表
+        { key = "f", mods = "LEADER", action = wezterm.action.ActivateKeyTable({ name = "resize_font", timeout_milliseconds = 1000 }) },
+        { key = "p", mods = "LEADER", action = wezterm.action.ActivateKeyTable({ name = "resize_pane", timeout_milliseconds = 1000 }) },
     }
 end
 
@@ -93,8 +97,8 @@ end
 function M.get_leader()
     return {
         key = "Space",
-        mods = "ALT|CTRL",
-        timeout_milliseconds = 1000,
+        mods = "CTRL",
+        timeout_milliseconds = 2000,
     }
 end
 
